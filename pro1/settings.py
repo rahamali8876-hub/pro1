@@ -47,6 +47,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    "rest_framework",
+    "apps.blog",
 ]
 
 MIDDLEWARE = [
@@ -89,12 +92,36 @@ WSGI_APPLICATION = "pro1.wsgi.application"
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-# depoyment
-DATABASES = {
-    "default": dj_database_url.config(
-        default="postgresql://postgres:postgres@localhost:5432/pro1", conn_max_age=600
-    )
-}
+# # depoyment
+# DATABASES = {
+#     "default": dj_database_url.config(
+#         default="postgresql://postgres:postgres@localhost:5432/pro1", conn_max_age=600
+#     )
+# }
+
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600
+        )
+    }
+else:
+    # Local development
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'pro1',
+            'USER': 'postgres',
+            'PASSWORD': 'admin',  # your actual local pg password
+            'HOST': 'localhost',
+            'PORT': '5432',
+        }
+    }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
